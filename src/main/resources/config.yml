@@ -1,0 +1,15 @@
+database:
+  jdbcUrl: ${DB_URL}
+  user: ${DB_USERNAME}
+  password: ${DB_PASSWORD}
+
+server:
+  applicationConnectors:
+    - type: http
+      port: 8080
+  adminConnectors:
+    - type: http
+      port: 8081
+
+logging:
+  level: INFO
