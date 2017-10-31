@@ -1,0 +1,47 @@
+#!/bin/bash
+
+set -o pipefail
+
+VAULT=$(which vault)
+
+function log() {
+    echo "$@" >> summon_vault.log
+}
+
+if [[ -z "$1" ]]; then
+    log "[ERROR] missing argument - path:key"
+    exit 1
+fi
+
+if [[ -z "${VAULT_ADDR}" ]]; then
+    log "[ERROR] missing environment variable - VAULT_ADDR"
+    exit 2
+fi
+
+if [[ -z "${VAULT_TOKEN}" ]]; then
+    log "[ERROR] missing environment variable - VAULT_TOKEN"
+    exit 3
+fi
+
+
+log "Incoming parameters ${1}"
+
+set -u
+
+IFS=':' read -ra PATH_AND_KEY <<< "${1}"
+
+SECRET_PATH=${PATH_AND_KEY[0]}
+SECRET_KEY=${PATH_AND_KEY[1]}
+
+log "Querying Vault with path ${SECRET_PATH}, key=${SECRET_KEY}"
+SECRET=$(${VAULT} read -field="$SECRET_KEY" "${SECRET_PATH}" 2>&1)
+
+EXIT_CODE=$?
+
+if [[ $EXIT_CODE != 0 ]]; then
+    log "[ERROR] Failed to read $SECRET_PATH:$SECRET_KEY: $SECRET ($EXIT_CODE)"
+    exit 4
+fi
+
+# Extract key from results
+echo "$SECRET"
