@@ -1,6 +1,5 @@
 package mvp.vault.demo;
 
-import com.codahale.metrics.health.jvm.ThreadDeadlockHealthCheck;
 import com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource;
 import io.dropwizard.Application;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
@@ -10,8 +9,6 @@ import io.dropwizard.setup.Environment;
 import mvp.vault.demo.health.DatabaseHealthCheck;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.sql.DataSource;
 
 public class VaultDropwizardApplication extends Application<VaultDropwizardConfiguration> {
     private static final Logger LOG = LoggerFactory.getLogger(VaultDropwizardApplication.class);

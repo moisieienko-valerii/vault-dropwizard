@@ -3,9 +3,9 @@ package mvp.vault.demo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- *
+ * Database connection properties
  */
-public class DatabaseConfiguration {
+public final class DatabaseConfiguration {
     private String jdbcUrl;
     private String user;
     private String password;

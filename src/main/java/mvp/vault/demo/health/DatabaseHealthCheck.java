@@ -6,14 +6,18 @@ import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import java.sql.Connection;
 import java.sql.Statement;
 
-/**
- *
- */
-public class DatabaseHealthCheck extends HealthCheck {
-    private final MysqlDataSource database;
+import static com.google.common.base.Preconditions.checkNotNull;
 
-    public DatabaseHealthCheck(MysqlDataSource database) {
-        this.database = database;
+/**
+ * Health check for Mysql database connection.
+ * This implementation uses simple query to identify connection or database issues.
+ */
+public final class DatabaseHealthCheck extends HealthCheck {
+    static final String CHECK_QUERY = "SELECT 1";
+    private final MysqlDataSource dataSource;
+
+    public DatabaseHealthCheck(MysqlDataSource dataSource) {
+        this.dataSource = checkNotNull(dataSource, "dataSource");
     }
 
     @Override
@@ -22,15 +26,15 @@ public class DatabaseHealthCheck extends HealthCheck {
             return Result.healthy();
         }
         else {
-            return Result.unhealthy("Cannot connect to [" + this.database.getUrl() + "] " +
-                    "with user [" + this.database.getUser() + "]");
+            return Result.unhealthy("Cannot connect to [" + this.dataSource.getUrl() + "] " +
+                    "with user [" + this.dataSource.getUser() + "]");
         }
     }
 
     private boolean isConnected() {
-        try (Connection connection = this.database.getConnection();
+        try (Connection connection = this.dataSource.getConnection();
              Statement statement = connection.createStatement()) {
-            statement.execute("SELECT 1");
+            statement.execute(CHECK_QUERY);
             return true;
         }
         catch (Exception e) {
