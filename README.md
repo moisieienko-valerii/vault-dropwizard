@@ -21,6 +21,7 @@ but also files related to Vault. They are:
 - summon-vault
 
 ###Policy files
+
 There are two policies files. 
 example-service.hcl defines application policy and example-service-admin.hcl defines admin policy.
 These policy should be written to Vault and used for application token generation.
